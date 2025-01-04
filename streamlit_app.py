@@ -25,44 +25,43 @@ def load_data(file_path, separator=',', encoding='utf-8'):
 st.sidebar.title("Sidebar Options")
 st.sidebar.header("Pie Chart Filters")
 
-data_path = 'data/data.json'
-df_path = 'data/comments_result_df.csv'
+post_data_df_path = 'data/post_data_df.csv'
+sentiment_df_path = 'data/sentiment_df.csv'
 
-# Data for Pie Chart
-with open(data_path, 'r', encoding='utf-8') as file:
-    data = json.load(file)
+post_data_df = load_data(post_data_df_path)
+sentiment_df = load_data(sentiment_df_path)
 
-# post_username = [[index + 1, item['username']] for index, item in enumerate(data)]
+# filtered_post_data_df = post_data_df[['username', 'post_link', 'likes_count', 'comments_count']]
 
-# usernames = st.sidebar.multiselect(
-#     "Choose post to display:",
-#     post_username,
-#     default=post_username
-# )
+# # Rename columns if needed
+# filtered_post_data_df.rename(columns={
+#     'likes_count': 'likes',
+#     'comments_count': 'comments_count'
+# }, inplace=True)
 
-# filtered_data = [item for index, item in enumerate(data) if index + 1 in usernames]
+st.title("Post Data Table")
+st.dataframe(post_data_df)
+st.dataframe(sentiment_df)
 
-# # Main Page Title
-# st.title("Streamlit Sidebar and Pie Chart with Plotly")
+# post_username = post_data_df[0]
 
-# labels = ['positive', 'neutral', 'negative']
-# positive_count = sum(1 for item in filtered_data if item['comments']['label'] == labels[0])
-# neutral_count = sum(1 for item in filtered_data if item['comments']['label'] == labels[1])
-# negative_count = sum(1 for item in filtered_data if item['comments']['label'] == labels[2])
-
-# values = [positive_count, neutral_count, negative_count]
-
-# Create a Plotly pie chart
-fig = px.pie(
-    names=labels,
-    values=values,
-    title="Comment Sentiment Distribution",
-    color_discrete_sequence=px.colors.qualitative.Set3
+posts = st.sidebar.multiselect(
+    "Choose post to display:",
+    filtered_post_data_df,
+    default=filtered_post_data_df
 )
 
-# Display in Streamlit
-st.title("Comment Sentiment Analysis")
-st.plotly_chart(fig)
+# # Create a Plotly pie chart
+# fig = px.pie(
+#     names=labels,
+#     values=values,
+#     title="Comment Sentiment Distribution",
+#     color_discrete_sequence=px.colors.qualitative.Set3
+# )
+
+# # Display in Streamlit
+# st.title("Comment Sentiment Analysis")
+# st.plotly_chart(fig)
 
 # Additional Note in Sidebar
 st.sidebar.info("Use the filters to adjust the pie chart data.")
